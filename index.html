@@ -1,16 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TG Secretary WebApp</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Секретарь — планирование</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <h1>Привет 👋</h1>
-  <p>Это мини-приложение для твоего секретаря.</p>
-  <button onclick="planEvent()">📅 Запланировать событие</button>
-  <button onclick="viewSchedule()">📖 Посмотреть расписание</button>
+  <div class="wrap">
+    <h1>Запланировать встречу</h1>
+
+    <label>Дата
+      <input id="date" type="date" required />
+    </label>
+
+    <label>Время
+      <input id="time" type="time" step="300" required />
+    </label>
+
+    <label>Длительность: <span id="durLabel">60 мин</span>
+      <input id="duration" type="range" min="5" max="720" step="5" value="60" />
+    </label>
+    <div class="chips">
+      <button type="button" data-dur="30">30 мин</button>
+      <button type="button" data-dur="60">1 час</button>
+      <button type="button" data-dur="120">2 часа</button>
+      <button type="button" data-dur="480">8 часов</button>
+      <button type="button" data-dur="720">12 часов</button>
+    </div>
+
+    <label>Категория
+      <select id="category">
+        <option>Работа</option>
+        <option>Личное</option>
+        <option>Спорт</option>
+        <option selected>Другое</option>
+      </select>
+    </label>
+
+    <label>Название
+      <input id="title" type="text" placeholder="Например: звонок с Иваном" required />
+    </label>
+
+    <div class="actions">
+      <button id="save" class="primary">Сохранить</button>
+      <button id="cancel" class="ghost">Отмена</button>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
