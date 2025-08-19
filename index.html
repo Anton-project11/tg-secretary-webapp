@@ -3,75 +3,126 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0d" />
-  <title>Секретарь — планирование</title>
-
-  <!-- iOS/Apple look & feel (внешний вид в styles.css) -->
+  <title>Секретарь</title>
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- Telegram WebApp API -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- Небольшие системные улучшения -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Новая встреча</h1>
-      <p class="subtitle">Выбери дату и время — остальное я сделаю сам.</p>
+  <div class="app">
+    <header class="nav">
+      <div class="brand">Секретарь</div>
+      <div class="segmented" role="tablist" aria-label="Разделы">
+        <button id="tab-plan" class="seg active" role="tab" aria-selected="true">План</button>
+        <button id="tab-agenda" class="seg" role="tab">Расписание</button>
+      </div>
+    </header>
 
-      <div class="group">
-        <div>
-          <label for="date">Дата</label>
-          <input id="date" type="date" class="field" required />
+    <!-- PLAN -->
+    <section id="page-plan" class="page active">
+      <div class="card">
+        <h2>Новая встреча</h2>
+
+        <div class="grid">
+          <div>
+            <label>Дата</label>
+            <input id="date" type="date" class="field" required />
+          </div>
+          <div>
+            <label>Время</label>
+            <input id="time" type="time" step="300" class="field" required />
+          </div>
+          <div>
+            <label>Длительность <span id="durLabel">60 мин</span></label>
+            <input id="duration" type="range" min="5" max="720" step="5" value="60" />
+            <div class="chips">
+              <button type="button" data-dur="30">30 мин</button>
+              <button type="button" data-dur="60">1 ч</button>
+              <button type="button" data-dur="120">2 ч</button>
+              <button type="button" data-dur="480">8 ч</button>
+              <button type="button" data-dur="720">12 ч</button>
+            </div>
+          </div>
+          <div>
+            <label>Категория</label>
+            <select id="category" class="field">
+              <option>Работа</option>
+              <option>Личное</option>
+              <option>Спорт</option>
+              <option selected>Другое</option>
+            </select>
+          </div>
+          <div class="full">
+            <label>Название</label>
+            <input id="title" type="text" class="field" placeholder="Например: созвон с Полиной" required />
+          </div>
+          <div class="full">
+            <label>Участники (через запятую)</label>
+            <input id="participants" type="text" class="field" placeholder="@user1, @user2 или 12345678" />
+            <small class="hint">Им придёт уведомление (если они запускали бота).</small>
+          </div>
+          <div class="row full">
+            <label class="toggle">
+              <input id="allowOverlap" type="checkbox" />
+              <span></span> Разрешить пересечение
+            </label>
+          </div>
         </div>
 
-        <div>
-          <label for="time">Время</label>
-          <input id="time" type="time" step="300" class="field" required />
-        </div>
-
-        <div>
-          <label for="duration">Длительность: <span id="durLabel">60 мин</span></label>
-          <input id="duration" type="range" min="5" max="720" step="5" value="60" />
-        </div>
-
-        <div class="chips" aria-label="Быстрые пресеты длительности">
-          <button type="button" data-dur="30">30 мин</button>
-          <button type="button" data-dur="60">1 час</button>
-          <button type="button" data-dur="120">2 часа</button>
-          <button type="button" data-dur="480">8 часов</button>
-          <button type="button" data-dur="720">12 часов</button>
-        </div>
-
-        <div>
-          <label for="category">Категория</label>
-          <select id="category" class="field">
-            <option>Работа</option>
-            <option>Личное</option>
-            <option>Спорт</option>
-            <option selected>Другое</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="title">Название</label>
-          <input id="title" type="text" class="field" placeholder="Например: звонок с Иваном" required />
+        <div class="row">
+          <button id="save" class="button primary">Сохранить</button>
+          <button id="cancel" class="button ghost">Отмена</button>
         </div>
       </div>
+    </section>
 
-      <div class="row" role="group" aria-label="Действия">
-        <button id="save" class="button primary">Сохранить</button>
-        <button id="cancel" class="button ghost">Отмена</button>
+    <!-- AGENDA -->
+    <section id="page-agenda" class="page">
+      <div class="card">
+        <h2>Расписание</h2>
+        <div class="grid">
+          <div>
+            <label>Дата</label>
+            <input id="agendaDate" type="date" class="field" />
+          </div>
+        </div>
+
+        <div class="row">
+          <button id="showAgenda" class="button">Показать в чате</button>
+        </div>
+
+        <div class="muted small">Перенос/отмена выполняются из чата по кнопкам к событию.</div>
       </div>
-    </div>
 
-    <div class="footer">Секретарь · работает в твоём часовом поясе</div>
+      <div class="card">
+        <h3>Быстрый перенос/отмена</h3>
+        <div class="grid">
+          <div>
+            <label>ID встречи</label>
+            <input id="eventId" type="number" class="field" placeholder="например: 42" />
+          </div>
+          <div>
+            <label>Новая дата</label>
+            <input id="moveDate" type="date" class="field" />
+          </div>
+          <div>
+            <label>Новое время</label>
+            <input id="moveTime" type="time" step="300" class="field" />
+          </div>
+          <div>
+            <label>Новая длительность (мин)</label>
+            <input id="moveDur" type="number" min="5" max="720" step="5" class="field" placeholder="60" />
+          </div>
+        </div>
+        <div class="row">
+          <button id="moveEvent" class="button">Перенести</button>
+          <button id="deleteEvent" class="button danger">Отменить</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">Секретарь · по твоему часовому поясу</footer>
   </div>
 
-  <!-- Логика формы: отправка данных в бота -->
   <script src="app.js"></script>
 </body>
 </html>
